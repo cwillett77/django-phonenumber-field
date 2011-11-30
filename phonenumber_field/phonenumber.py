@@ -23,8 +23,13 @@ class PhoneNumber(phonenumbers.phonenumber.PhoneNumber):
             try:
                 phone_number = PhoneNumber.from_string(phone_number=value)
             except NumberParseException, e:
+                # If the user forgot the leading '+', add it.
+                if len(value.strip()) > 0 and value.strip()[0] != '+':
+                    value = '+' + value
+                    phone_number = PhoneNumber.from_string(phone_number=value)
                 # the string provided is not a valid PhoneNumber.
-                phone_number = PhoneNumber(raw_input=value)
+                else:
+                    phone_number = PhoneNumber(raw_input=value)
         elif isinstance(value, PhoneNumber):
             phone_number = value
         return phone_number
